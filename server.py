@@ -1,37 +1,33 @@
-'''
-This is a flask server
-'''
-
 from flask import Flask, render_template, request
-from EmotionDetection.emotion_detection import emotion_predictor
+from EmotionDetection.emotion_detection import emotion_detector
 
-app = Flask("EmotionDetection", template_folder="templates")
+app = Flask("Emotion Detector")
 
-@app.route("/emotion_predictor")
-def emotion_predictor_function():
+@app.route("/emotionDetector")
+def emotion_detector_function():
+    ''' This function calls the application
     '''
-    This function calls the application
-    '''
-    text_to_analyze = request.args.get('textToAnalyze')
-    response = emotion_predictor(text_to_analyze)
+    test_to_analyze = request.args.get('textToAnalyze')
+    response = emotion_detector(text_to_analyze)
 
-    if response[0]['dominant_emotion'] is None:
-        response_text = "Invalid Input!"
+    if response['dominant_emotion'] is None:
+        response_text = "Invalid Input! Please try again."
     else:
-        response_text = ("For the given statement, the system response is 'anger': "
-                         f"{response[0]['anger']}, 'disgust': {response[0]['disgust']}, "
-                         f"'fear': {response[0]['fear']}, 'joy': {response[0]['joy']}, "
-                         f"'sadness': {response[0]['sadness']}. The dominant emotion is "
-                         f"{response[0]['dominant_emotion']}.")
+        response_text = f"For the given statement, the system response is 'anger': \
+                    {response['anger']}, 'disgust': {response['disgust']}, \
+                    'fear': {response['fear']}, 'joy': {response['joy']}, \
+                    'sadness': {response['sadness']}. The dominant emotion is \
+                    {response['dominant_emotion']}."
 
     return response_text
 
-@app.route("/")
+@app.route("\")
 def render_index_page():
-    '''
-    This is a function to render the index.html
+    ''' This is the function to render the html interface
     '''
     return render_template('index.html')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host = "0.0.0.0", port = 5000)
+
+
