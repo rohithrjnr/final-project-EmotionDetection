@@ -1,42 +1,26 @@
 import requests
+import json
 
-def emotion_predictor(text_to_analyze):
-    url= 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
-    headers= {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
+def emotion_detector(text_to_analyse):
 
-    if not text_to_analyze or text_to_analyze.strip() == '':
-        raise ValueError("Input text is blank. Pleases provide valid text for analysis.")
-
-    data= {
-        "raw_document": {
-        "text" : text_to_analyze
-        }
-    }
+    url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
+    headers = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
+    myobj = {"raw_document": { "text": text_to_analyse } }
+    response = requests.post(url, json = myobj, headers = headers)
+    status_code = response.status_code
     
-    response = requests.post(url, headers=headers, json=data)
+    if status_code == 400:
+        formatted_output = { 'anger': None,
+                             'disgust': None,
+                             'fear': None,
+                             'joy': None,
+                             'sadness': None,
+                             'dominant_emotion': None }
+    else:
+        res = json.loads(response.text)
+        formatted_output = res[‘emotionPredictions’][0][‘emotion’]
+        dominant_emotion = max(formatted_response, key = lambda x: formatted_response[x])
+        formatted_response[‘dominant_dictionary’] = dominant_emotion
 
-    if response.status_code == 400:
-        return None, None
-    
-    response.raise_for_status()
-
-    formatted_response = response.json()
-
-    emotions=formatted_response['emotionPredictions'][0]['emotion']
-
-    dominant_emotion = max(emotions, key=emotions.get)
-    dominant_score = emotions[dominant_emotion]
-
-    return dominant_emotion, dominant_score
-
-#emotion_predictor("I love new technology")
-
-try: 
-    print(emotion_predictor("I love new technology"))
-    print(emotion_predictor(""))
-except Exception as e:
-    print(f"Error : {e}") 
-
-
-
+    return formatted_response 
 
