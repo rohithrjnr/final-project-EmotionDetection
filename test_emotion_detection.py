@@ -1,28 +1,18 @@
 import unittest
-from EmotionDetection.emotion_detection import emotion_predictor
+from EmotionDetection.emotion_detection import emotion.detector
+ 
+class TestEmotionDetector(unittest.TestCase):
+    def test_emotion_detector(self):
+        result1 = emotion.detector(“I am glad this happened”)
+        self.assertEqual(result1[‘dominant_emotion’], ’joy’)
+        result2 = emotion.detector(“I am really mad about this”)
+        self.assertEqual(result2[‘dominant_emotion’], ‘anger’)
+        result3 = emotion.detector(“I feel disgusted just hearing about this”)
+        self.assertEqual(result3[‘dominant_emotion’], ’ disgust’)
+        result4 = emotion.detector(“I am so sad about this”)
+        self.assertEqual(result4[‘dominant_emotion’], ’sadness’)
+        result5 = emotion.detector(“I am really afraid that this will happen”)
+        self.assertEqual(result5[‘dominant_emotion’], ’fear’)
 
-class TestEmotionDetection(unittest.TestCase):
-    def test_joy(self):
-        dominant_emotion, _ = emotion_predictor("I am glad this happened")
-        self.assertEqual(dominant_emotion, 'joy', "Expected 'joy' but got something else!")
-    
-    def test_anger(self):
-        dominant_emotion, _= emotion_predictor("I am really mad about this")
-        self.assertEqual(dominant_emotion, 'anger', "Expected 'anger' but got something else!")
-    
-    def test_disgust(self):
-        dominant_emotion, _= emotion_predictor("I feel disgusted just hearing about this")
-        self.assertEqual(dominant_emotion, 'disgust', "Expected 'disgust' but got something else!")
-
-    def test_sadness(self):
-        dominant_emotion, _= emotion_predictor("I am so sad about this")
-        self.assertEqual(dominant_emotion, 'sadness', "Expected 'sadness' but got something else!")
-
-    def test_fear(self):
-        dominant_emotion, _= emotion_predictor("I am really afraid that this will happen")
-        self.assertEqual(dominant_emotion, 'fear', "Expected 'fear' but got something else!")
-
-if __name__ == '__main__':
-    unittest.main()
-
+unittest.main()
 
